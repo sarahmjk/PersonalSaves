@@ -8,23 +8,53 @@
 
 import UIKit
 
-class SpendingDetailViewController: UIViewController {
-
+class SpendingDetailViewController: UIViewController, UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+    
+    @IBOutlet weak var spendingNameField: UITextField!
+    @IBOutlet weak var spendingCostField: UITextField!
+    @IBOutlet weak var spendingDateField: UITextField!
+    @IBOutlet weak var imageOfProduct: UIImageView!
+    
+    var spendingName: String!
+    var spendingCost: String!
+    var spendingDate: String!
+    var imagePicker = UIImagePickerController ()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+      
 
-        // Do any additional setup after loading the view.
+        if spendingName == nil {
+            spendingCost = ""
+            spendingName = ""
+            spendingDate = ""
+        }
+        spendingNameField.text = spendingName
+        spendingCostField.text = spendingCost
+        spendingDateField.text = spendingDate
+        
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "UnwindFromSave" {
+            spendingNameField.text = spendingName
+            spendingCostField.text = spendingCost
+            spendingDateField.text = spendingDate
+        }
     }
-    */
+    
+    @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
+        let isPresentingInAddMode = presentingViewController is UINavigationController
+        if isPresentingInAddMode {
+            dismiss(animated: true, completion: nil)
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
+    }
+    
+    
 
 }

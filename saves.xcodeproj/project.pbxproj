@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C332E0D22755379009AA9AE /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C332E0C22755379009AA9AE /* Photo.swift */; };
 		2CD804CD226E6EAA00641652 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804CC226E6EAA00641652 /* AppDelegate.swift */; };
 		2CD804CF226E6EAA00641652 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804CE226E6EAA00641652 /* ViewController.swift */; };
 		2CD804D2226E6EAA00641652 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD804D0226E6EAA00641652 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C332E0C22755379009AA9AE /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		2CD804C9226E6EAA00641652 /* saves.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = saves.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CD804CC226E6EAA00641652 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2CD804CE226E6EAA00641652 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				2CD804CE226E6EAA00641652 /* ViewController.swift */,
 				2CD804E0226FFE0D00641652 /* SpendingViewController.swift */,
 				2CD804E6227002F900641652 /* SpendingDetailViewController.swift */,
+				2C332E0C22755379009AA9AE /* Photo.swift */,
 				2CD804E2226FFEAE00641652 /* EarningViewController.swift */,
 				2CD804E82275286F00641652 /* EarningDetailViewController.swift */,
 				2CD804E4226FFEE300641652 /* CalendarViewController.swift */,
@@ -150,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C332E0D22755379009AA9AE /* Photo.swift in Sources */,
 				2CD804E5226FFEE300641652 /* CalendarViewController.swift in Sources */,
 				2CD804E7227002F900641652 /* SpendingDetailViewController.swift in Sources */,
 				2CD804E92275286F00641652 /* EarningDetailViewController.swift in Sources */,
