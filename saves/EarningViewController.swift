@@ -9,22 +9,52 @@
 import UIKit
 
 class EarningViewController: UIViewController {
-
+    @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var totalEarnedLabel: UILabel!
+    struct EarningListItem {
+        var earningName = ""
+        var earningDate = ""
+    }
+    
+    var totalEarning = 0
+    var EarningListItems: [EarningListItem] = []
+    
+    @IBOutlet weak var EarningTableView: UITableView!
+    var earningNames: [String] = []
+    var earningDates: [String] = []
+    var earningCosts: [String]=[]
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        EarningTableView.delegate = self
+        EarningTableView.dataSource = self
+        
+        for _ in 0..<earningCosts.count{
+            earningCosts.append("")
+        }
+        
+        for _ in 0..<earningNames.count{
+            earningDates.append("")
+        }
+        
+        for earningName in earningNames {
+            EarningListItems.append(EarningListItem(earningName: earningName, earningDate: ""))
+        }
+        for EarningListItem in EarningListItems {
+            print(EarningListItem.earningName, EarningListItem.earningDate)
+        }
+
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
+        let isPresentingInAddMode = presentingViewController is UINavigationController
+        if isPresentingInAddMode {
+            dismiss(animated: true, completion: nil)
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
-    */
-
+    
 }

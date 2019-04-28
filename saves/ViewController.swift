@@ -14,7 +14,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
+    
 
-
+//    @IBAction func incomeButtonPressed(_ sender: UIButton) {
+//        performSegue(withIdentifier: "IncomeSegue", sender: nil)
+//    }
+//
+//    @IBAction func spendingButtonPressed(_ sender: UIButton) {
+//        performSegue(withIdentifier: "SpendingSegue", sender: nil)
+//    }
+//}
 }
-

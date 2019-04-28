@@ -21,12 +21,13 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
     var spendingDate: String!
     var spendingReview: String!
     var imagePicker = UIImagePickerController ()
-    var photos = Photos!
+    var photos: Photos!
     
     override func viewDidLoad() {
         super.viewDidLoad()
       
-
+        imagePicker.delegate = self
+        
         if spendingName == nil {
             spendingCost = ""
             spendingName = ""
@@ -64,6 +65,13 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
         present(alertController, animated: true, completion: nil)
     }
     
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(alertAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
     @IBAction func addPhotoPressed(_ sender: Any) {
         cameraOrLibraryAlert()
     }
@@ -79,18 +87,16 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
     
     @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
     }
-    
-    
 
 }
 
-extension SpendingDetailViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+extension SpendingDetailViewController   {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = Photo()
         photo.image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         dismiss(animated: true) {
-            photo.saveData(spot: self.spot) { (success) in
+            photo.saveData() { (success) in
             }
         }
     }

@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import UIKit
 
 class Photos {
     var photoArray: [Photo] = []
@@ -17,19 +18,19 @@ class Photos {
         db = Firestore.firestore()
     }
     
-    func loadData(spot: Spot, completed: @escaping () -> ())  {
-        guard spot.documentID != "" else {
+    func loadData(photo: Photo,completed: @escaping () -> ())  {
+        guard photo.documentUUID != "" else {
             return
         }
         let storage = Storage.storage()
-        db.collection("spots").document(spot.documentID).collection("photos").addSnapshotListener { (querySnapshot, error) in
+        db.collection("photos").addSnapshotListener { (querySnapshot, error) in
             guard error == nil else {
                 print("*** ERROR: adding the snapshot listener \(error!.localizedDescription)")
                 return completed()
             }
             self.photoArray = []
             var loadAttempts = 0
-            let storageRef = storage.reference().child(spot.documentID)
+            let storageRef = storage.reference().child(photo.documentUUID)
             // there are querySnapshot!.documents.count documents in the spots snapshot
             for document in querySnapshot!.documents {
                 let photo = Photo(dictionary: document.data())
