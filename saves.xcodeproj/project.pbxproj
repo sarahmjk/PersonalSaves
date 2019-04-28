@@ -12,6 +12,11 @@
 		2CD804D2226E6EAA00641652 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD804D0226E6EAA00641652 /* Main.storyboard */; };
 		2CD804D4226E6EAB00641652 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CD804D3226E6EAB00641652 /* Assets.xcassets */; };
 		2CD804D7226E6EAB00641652 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD804D5226E6EAB00641652 /* LaunchScreen.storyboard */; };
+		2CD804E1226FFE0D00641652 /* SpendingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804E0226FFE0D00641652 /* SpendingViewController.swift */; };
+		2CD804E3226FFEAE00641652 /* EarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804E2226FFEAE00641652 /* EarningViewController.swift */; };
+		2CD804E5226FFEE300641652 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804E4226FFEE300641652 /* CalendarViewController.swift */; };
+		2CD804E7227002F900641652 /* SpendingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804E6227002F900641652 /* SpendingDetailViewController.swift */; };
+		2CD804E92275286F00641652 /* EarningDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD804E82275286F00641652 /* EarningDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +27,11 @@
 		2CD804D3226E6EAB00641652 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CD804D6226E6EAB00641652 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2CD804D8226E6EAB00641652 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2CD804E0226FFE0D00641652 /* SpendingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendingViewController.swift; sourceTree = "<group>"; };
+		2CD804E2226FFEAE00641652 /* EarningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarningViewController.swift; sourceTree = "<group>"; };
+		2CD804E4226FFEE300641652 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		2CD804E6227002F900641652 /* SpendingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendingDetailViewController.swift; sourceTree = "<group>"; };
+		2CD804E82275286F00641652 /* EarningDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarningDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +66,11 @@
 			children = (
 				2CD804CC226E6EAA00641652 /* AppDelegate.swift */,
 				2CD804CE226E6EAA00641652 /* ViewController.swift */,
+				2CD804E0226FFE0D00641652 /* SpendingViewController.swift */,
+				2CD804E6227002F900641652 /* SpendingDetailViewController.swift */,
+				2CD804E2226FFEAE00641652 /* EarningViewController.swift */,
+				2CD804E82275286F00641652 /* EarningDetailViewController.swift */,
+				2CD804E4226FFEE300641652 /* CalendarViewController.swift */,
 				2CD804D0226E6EAA00641652 /* Main.storyboard */,
 				2CD804D3226E6EAB00641652 /* Assets.xcassets */,
 				2CD804D5226E6EAB00641652 /* LaunchScreen.storyboard */,
@@ -135,7 +150,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CD804E5226FFEE300641652 /* CalendarViewController.swift in Sources */,
+				2CD804E7227002F900641652 /* SpendingDetailViewController.swift in Sources */,
+				2CD804E92275286F00641652 /* EarningDetailViewController.swift in Sources */,
 				2CD804CF226E6EAA00641652 /* ViewController.swift in Sources */,
+				2CD804E3226FFEAE00641652 /* EarningViewController.swift in Sources */,
+				2CD804E1226FFE0D00641652 /* SpendingViewController.swift in Sources */,
 				2CD804CD226E6EAA00641652 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
