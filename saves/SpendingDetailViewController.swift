@@ -13,12 +13,15 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var spendingNameField: UITextField!
     @IBOutlet weak var spendingCostField: UITextField!
     @IBOutlet weak var spendingDateField: UITextField!
+    @IBOutlet weak var spendingReviewField: UITextField!
     @IBOutlet weak var imageOfProduct: UIImageView!
     
     var spendingName: String!
     var spendingCost: String!
     var spendingDate: String!
+    var spendingReview: String!
     var imagePicker = UIImagePickerController ()
+    var photos = Photos!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +31,12 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
             spendingCost = ""
             spendingName = ""
             spendingDate = ""
+            spendingReview = ""
         }
         spendingNameField.text = spendingName
         spendingCostField.text = spendingCost
         spendingDateField.text = spendingDate
+        spendingReviewField.text = spendingReview
         
     }
     
@@ -40,7 +45,27 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
             spendingNameField.text = spendingName
             spendingCostField.text = spendingCost
             spendingDateField.text = spendingDate
+            
         }
+    }
+    
+    func cameraOrLibraryAlert() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
+            self.accessCamera()
+        }
+        let photoLibraryAction = UIAlertAction(title: "Photo Library", style: .default) { _ in
+            self.accessLibrary()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cameraAction)
+        alertController.addAction(photoLibraryAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func addPhotoPressed(_ sender: Any) {
+        cameraOrLibraryAlert()
     }
     
     @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
@@ -57,4 +82,34 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
     
     
 
+}
+
+extension SpendingDetailViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let photo = Photo()
+        photo.image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        dismiss(animated: true) {
+            photo.saveData(spot: self.spot) { (success) in
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func accessLibrary() {
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func accessCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imagePicker.sourceType = .camera
+            present(imagePicker, animated: true, completion: nil)
+        } else {
+            showAlert(title: "Camera Not Available", message: "There is no camera available on this device.")
+        }
+    }
 }
