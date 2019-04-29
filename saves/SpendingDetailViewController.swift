@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+
 
 class SpendingDetailViewController: UIViewController, UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
@@ -17,11 +19,14 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var imageOfProduct: UIImageView!
     
     var spendingName: String!
-    var spendingCost: String!
+    var spendingCost: Double!
     var spendingDate: String!
     var spendingReview: String!
     var imagePicker = UIImagePickerController ()
     var photos: Photos!
+    var spot: Spot!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,23 +34,28 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
         imagePicker.delegate = self
         
         if spendingName == nil {
-            spendingCost = ""
+            spendingCost = 0.0
             spendingName = ""
             spendingDate = ""
             spendingReview = ""
         }
         spendingNameField.text = spendingName
-        spendingCostField.text = spendingCost
+        spendingCostField.text = String(spendingCost)
         spendingDateField.text = spendingDate
         spendingReviewField.text = spendingReview
+        
+        if spot == nil {
+            spot = Spot()
+        }
         
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "UnwindFromSave" {
-            spendingNameField.text = spendingName
-            spendingCostField.text = spendingCost
-            spendingDateField.text = spendingDate
+            spendingName = spendingNameField.text
+            spendingCost = Double(spendingCostField.text!)
+            spendingDate = spendingDateField.text
+            spendingReview = spendingReviewField.text
             
         }
     }
@@ -96,7 +106,7 @@ extension SpendingDetailViewController   {
         let photo = Photo()
         photo.image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
         dismiss(animated: true) {
-            photo.saveData() { (success) in
+            photo.saveData(spot: self.spot) { (success) in
             }
         }
     }

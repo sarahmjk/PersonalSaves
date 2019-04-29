@@ -34,7 +34,7 @@ class Photo {
         self.init(image: UIImage(),description: "", documentUUID: "")
     }
     
-    func saveData(completed: @escaping (Bool) -> ()) {
+    func saveData(spot: Spot,completed: @escaping (Bool) -> ()) {
         let db = Firestore.firestore()
         let storage = Storage.storage()
         
@@ -48,7 +48,7 @@ class Photo {
         documentUUID = UUID().uuidString // generate a unique ID to use for the photo image's name
         
         // create a ref to upload storage to spot.documentID's folder (bucket), with the name we created.
-        let storageRef = storage.reference().child(self.documentUUID)
+        let storageRef = storage.reference().child(spot.documentID).child(self.documentUUID)
         let uploadTask = storageRef.putData(photoData, metadata: uploadMetadata) {metadata, error in
             guard error == nil else {
                 print("😡 ERROR during .putData storage upload for reference \(storageRef). Error: \(error!.localizedDescription)")
@@ -56,17 +56,16 @@ class Photo {
             }
             print("😎 Upload worked! Metadata is \(metadata!)")
         }
-        
         uploadTask.observe(.success) { (snapshot) in
             
             // Create the dictionary representing the data we want to save
             let dataToSave = self.dictionary
             
             // This will either create a new doc at documentUUID or update the existing doc with that name
-            let ref = db.collection("photos").document(self.documentUUID)
+            let ref = db.collection("spots").document(spot.documentID).collection("photos").document(self.documentUUID)
             ref.setData(dataToSave) { (error) in
                 if let error = error {
-                    print("*** ERROR: updating document \(self.documentUUID) \(error.localizedDescription)")
+                    print("*** ERROR: updating document \(self.documentUUID) in spot \(spot.documentID) \(error.localizedDescription)")
                     completed(false)
                 } else {
                     print("^^^ Document updated with ref ID \(ref.documentID)")
@@ -77,7 +76,7 @@ class Photo {
         
         uploadTask.observe(.failure) { (snapshot) in
             if let error = snapshot.error {
-                print("*** ERROR: upload task for file \(self.documentUUID) failed; error \(error)")
+                print("*** ERROR: upload task for file \(self.documentUUID) failed, in spot \(spot.documentID), error \(error)")
             }
             return completed(false)
         }
