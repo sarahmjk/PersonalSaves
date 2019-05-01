@@ -10,38 +10,30 @@ import Foundation
 import Firebase
 
 
-class Spot: NSObject{
+class Spot{
     
     var spendingName: String
     var spendingCost: Double
     var spendingDate: String
     var spendingReview: String
     var documentID: String
-   
-
-
-    var title: String? {
-        return spendingName
-    }
-    
-    var subtitle: String? {
-        return spendingDate
-    }
+   var postingUserID: String
     
     var dictionary: [String: Any] {
-        return ["spendingName": spendingName, "spendingDate":spendingDate, "spendingCost": spendingCost, "spendingReview": spendingReview]
+        return ["spendingName": spendingName, "spendingDate":spendingDate, "spendingCost": spendingCost, "spendingReview": spendingReview, "postingUserID": postingUserID]
     }
     
-    init(spendingName: String, spendingDate: String,spendingCost: Double, spendingReview: String,documentID: String) {
+    init(spendingName: String, spendingDate: String,spendingCost: Double, spendingReview: String,documentID: String,  postingUserID: String) {
         self.spendingName = spendingName
         self.spendingDate = spendingDate
         self.spendingCost = spendingCost
         self.spendingReview = spendingReview
         self.documentID = documentID
+        self.postingUserID = postingUserID
     }
     
-    convenience override init() {
-        self.init(spendingName: "", spendingDate:"", spendingCost: 0.0, spendingReview: "",documentID: "")
+    convenience init() {
+        self.init(spendingName: "", spendingDate:"", spendingCost: 0.0, spendingReview: "",documentID: "", postingUserID: "")
     }
     
     convenience init(dictionary: [String: Any]) {
@@ -49,11 +41,17 @@ class Spot: NSObject{
         let spendingDate = dictionary["spendingDate"] as! String? ?? ""
         let spendingCost = dictionary["spendingCost"] as! Double? ?? 0.0
         let spendingReview = dictionary["spendingReview"] as! String? ?? ""
-        self.init(spendingName: "", spendingDate:"", spendingCost: 0.0, spendingReview: "",documentID: "")
+        self.init(spendingName: spendingName, spendingDate:spendingDate, spendingCost: spendingCost, spendingReview: spendingReview, documentID: "", postingUserID: "")
     }
     
     func saveData(completed: @escaping (Bool) -> ()) {
         let db = Firestore.firestore()
+        guard let postingUserID = (Auth.auth().currentUser?.uid) else {
+            print("*** ERROR: Could not save data because we don't have a valid postingUserID")
+            return completed(false)
+        }
+        self.postingUserID = postingUserID
+        
         // Create the dictionary representing the data we want to save
         let dataToSave = self.dictionary
         
@@ -84,30 +82,30 @@ class Spot: NSObject{
         }
     }
     
-    func updateTotalSpent(completed: @escaping ()->()) {
-        let db = Firestore.firestore()
-        let spendingCostsRef = db.collection("spots").document(self.documentID).collection("spendingCosts")
-        spendingCostsRef.getDocuments { (querySnapshot, error) in
-            guard error == nil else {
-                return completed()
-            }
-            var totalSpent = 0.0
-            for document in querySnapshot!.documents { // go through all of the reviews documents
-                let spendingCostDictionary = document.data()
-                let spendingCost = spendingCostDictionary["spendingCost"] as! Double? ?? 0.0
-                totalSpent = totalSpent + Double(spendingCost)
-            }
-            let dataToSave = self.dictionary
-            let spotRef = db.collection("spots").document(self.documentID)
-            spotRef.setData(dataToSave) { error in // save it & check errors
-                guard error == nil else {
-                    return completed()
-                }
-                print("^^^ Document updated with ref ID \(self.documentID)")
-                completed()
-            }
-        }
-    }
+//    func updateTotalSpent(completed: @escaping ()->()) {
+//        let db = Firestore.firestore()
+//        let spendingCostsRef = db.collection("spots").document(self.documentID).collection("spendingCosts")
+//        spendingCostsRef.getDocuments { (querySnapshot, error) in
+//            guard error == nil else {
+//                return completed()
+//            }
+//            var totalSpent = 0.0
+//            for document in querySnapshot!.documents { // go through all of the reviews documents
+//                let spendingCostDictionary = document.data()
+//                let spendingCost = spendingCostDictionary["spendingCost"] as! Double? ?? 0.0
+//                totalSpent = totalSpent + Double(spendingCost)
+//            }
+//            let dataToSave = self.dictionary
+//            let spotRef = db.collection("spots").document(self.documentID)
+//            spotRef.setData(dataToSave) { error in // save it & check errors
+//                guard error == nil else {
+//                    return completed()
+//                }
+//                print("^^^ Document updated with ref ID \(self.documentID)")
+//                completed()
+//            }
+//        }
+//    }
 }
 
 

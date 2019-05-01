@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C10DDAD2276CE09000E39A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C10DDAC2276CE09000E39A7 /* GoogleService-Info.plist */; };
+		2C10DDB122771D9A000E39A7 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C10DDB022771D9A000E39A7 /* constants.swift */; };
 		2C332E0D22755379009AA9AE /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C332E0C22755379009AA9AE /* Photo.swift */; };
 		2C332E0F22755447009AA9AE /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C332E0E22755447009AA9AE /* Photos.swift */; };
 		2C332E112276A3EF009AA9AE /* Spot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C332E102276A3EF009AA9AE /* Spot.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		10DA910764557513022C7D3F /* Pods-saves.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-saves.debug.xcconfig"; path = "Target Support Files/Pods-saves/Pods-saves.debug.xcconfig"; sourceTree = "<group>"; };
 		2C10DDAC2276CE09000E39A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2C10DDB022771D9A000E39A7 /* constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
 		2C332E0C22755379009AA9AE /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		2C332E0E22755447009AA9AE /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
 		2C332E102276A3EF009AA9AE /* Spot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			children = (
 				2CD804CC226E6EAA00641652 /* AppDelegate.swift */,
 				2CD804CE226E6EAA00641652 /* ViewController.swift */,
+				2C10DDB022771D9A000E39A7 /* constants.swift */,
 				2C332E102276A3EF009AA9AE /* Spot.swift */,
 				2C332E122276AA73009AA9AE /* Spots.swift */,
 				2CD804E0226FFE0D00641652 /* SpendingViewController.swift */,
@@ -291,6 +294,7 @@
 				2CD804E92275286F00641652 /* EarningDetailViewController.swift in Sources */,
 				2CD804CF226E6EAA00641652 /* ViewController.swift in Sources */,
 				2CD804E3226FFEAE00641652 /* EarningViewController.swift in Sources */,
+				2C10DDB122771D9A000E39A7 /* constants.swift in Sources */,
 				2CD804E1226FFE0D00641652 /* SpendingViewController.swift in Sources */,
 				2C332E152276ABC9009AA9AE /* EarningSpot.swift in Sources */,
 				2C332E112276A3EF009AA9AE /* Spot.swift in Sources */,

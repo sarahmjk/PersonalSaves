@@ -13,18 +13,73 @@ import GoogleSignIn
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var budgetLabel: UITextField!
+    @IBOutlet weak var nonBudgetLabel: UILabel!
+    @IBOutlet weak var canSpendLabel: UILabel!
+    
     var authUI: FUIAuth!
+    var budgetAmount = 0.0
+    var canSpend = 0.0
+    var nonBudget = 0.0
+    
+    var totalSpent: Double!
+    var totalEarning: Double!
+    var defaultsData = UserDefaults.standard
+    
+    var spots: Spots!
+    var earningSpots: EarningSpots!
     
     override func viewDidLoad() {
         super.viewDidLoad()
        
         authUI = FUIAuth.defaultAuthUI()
         authUI.delegate = self
+        
+        spots = Spots()
+        earningSpots = EarningSpots()
+        
+        spots.loadData {
+            print("loading spots")
+        }
+        
+        earningSpots.loadData {
+            self.totalEarning = self.earningSpots.totalCost()
+            if self.earningSpots.totalCost() < self.budgetAmount {
+                self.nonBudget = 0.0
+            } else {
+                self.nonBudget = self.earningSpots.totalCost() - self.budgetAmount
+            }
+        }
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         signIn()
+        budgetAmount = defaultsData.double(forKey: "budgetAmount")
+        totalSpent = defaultsData.double(forKey: "totalSpent")
+        totalEarning = defaultsData.double(forKey: "totalEarning")
+        
+        updateUI()
+        
+    }
+    
+    func updateUI() {
+        canSpend = budgetAmount - totalSpent
+        if totalEarning < budgetAmount {
+            nonBudget = 0.0
+        } else {
+            nonBudget = totalEarning - budgetAmount
+        }
+        canSpendLabel.text = String(canSpend)
+        nonBudgetLabel.text = String(nonBudget)
+    }
+    
+    @IBAction func calcButtonPressed(_ sender: Any) {
+        budgetAmount = Double(budgetLabel.text!)!
+        defaultsData.set(budgetAmount, forKey: "budgetAmount")
+        updateUI()
     }
     
     func signIn() {

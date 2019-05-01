@@ -31,9 +31,7 @@ class EarningDetailViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Unwind" {
-            updateUserInterface()
-        }
+        
     }
     
     func updateUserInterface() {
@@ -61,6 +59,9 @@ class EarningDetailViewController: UIViewController {
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
         self.updateUserInterface()
         earningSpot.saveData { success in
+            print("saving data")
+            print("Name: " + self.earningSpot.earningName)
+            print("Cost: " + String(self.earningSpot.earningCost))
             if success {
                 self.leaveViewController()
             } else {

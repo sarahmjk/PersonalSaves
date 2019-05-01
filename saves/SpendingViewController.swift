@@ -14,61 +14,53 @@ class SpendingViewController: UIViewController {
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var totalSpentLabel: UILabel!
-    
-    struct SpendListItem {
-        var spendingName = ""
-        var spendingDate = ""
-        var spendingReview = ""
-        var spendingCost = 0.0
-    }
-    
-    var totalSpent = 0
-    var SpendListItems: [SpendListItem] = []
-    
     @IBOutlet weak var spendingTableView: UITableView!
     
+    var defaultsData = UserDefaults.standard
     
-    var spendingNames: [String]=[]
-    var spendingDates: [String] = []
-    var spendingCosts: [Double]=[]
-    var spendingReviews: [String] = []
-    
+    var totalSpent = 0.0
+    var spot: Spot!
+    var spots: Spots!
+    var photos: Photos!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if spot == nil {
+            spot = Spot()
+        }
+        
+        spots = Spots()
+        photos = Photos()
+        
+        totalSpent = defaultsData.double(forKey: "totalSpent")
+        
 
-        spendingTableView.delegate = self
-        spendingTableView.dataSource = self
-        totalSpentLabel.text = String(totalSpent)
         
-        for _ in 0..<spendingCosts.count{
-            spendingCosts.append(0.0)
-        }
-        
-        for _ in 0..<spendingNames.count{
-            spendingDates.append("")
-        }
-        
-        for _ in 0..<spendingNames.count{
-            spendingReviews.append("")
-        }
-        
-        for spendingName in spendingNames {
-            SpendListItems.append(SpendListItem(spendingName: spendingName, spendingDate: "", spendingReview: "", spendingCost: 0.0))
-        }
-        
-        for spendListItem in SpendListItems {
-            print(spendListItem.spendingName, spendListItem.spendingDate)
-        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+            spots.loadData {
+                self.spendingTableView.reloadData()
+                self.totalSpent = 0.0
+                for spot in self.spots.spotArray {
+                    self.totalSpent = self.totalSpent + spot.spendingCost
+                    self.photos.loadData(spot: spot) {
+                        self.spendingTableView.reloadData()
+                    }
+                }
+                self.defaultsData.set(self.totalSpent, forKey: "totalSpent")
+                self.totalSpentLabel.text = String(self.totalSpent)
+            }
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowItemDetail" {
             let destination = segue.destination as! SpendingDetailViewController
             var selectedIndexPath = spendingTableView.indexPathForSelectedRow
-            destination.spendingName = spendingNames[selectedIndexPath!.row]
-            destination.spendingDate = spendingDates[selectedIndexPath!.row]
-            destination.spendingReview = spendingReviews[selectedIndexPath!.row]
-            destination.spendingCost = spendingCosts[selectedIndexPath!.row]
+            destination.spot = spots.spotArray[selectedIndexPath!.row]
+
         } else {
             if let selectedPath = spendingTableView.indexPathForSelectedRow {
                 spendingTableView.deselectRow(at: selectedPath, animated: true)
@@ -77,20 +69,20 @@ class SpendingViewController: UIViewController {
     }
     
 
+    func totalSpendingValue () {
+    
+        totalSpent = totalSpent + spot.spendingCost
+        totalSpentLabel.text = String(totalSpent)
+        
+    }
     
     @IBAction func unwindFromItemDetailViewController(segue: UIStoryboardSegue) {
         let source = segue.source as! SpendingDetailViewController
         if let selectedIndexPath = spendingTableView.indexPathForSelectedRow {
-            spendingNames[selectedIndexPath.row] = source.spendingName
-            spendingDates[selectedIndexPath.row] = source.spendingDate
-            spendingReviews[selectedIndexPath.row] = source.spendingReview
-            spendingCosts[selectedIndexPath.row] = source.spendingCost
+            spots.spotArray[selectedIndexPath.row] = source.spot
         } else {
-            let newIndexPath = IndexPath(row: spendingNames.count, section: 0)
-            spendingNames.append(source.spendingName)
-            spendingDates.append(source.spendingDate)
-            spendingReviews.append(source.spendingReview)
-            spendingCosts.append(source.spendingCost)
+            let newIndexPath = IndexPath(row: spots.spotArray.count, section: 0)
+            spots.spotArray.append(source.spot)
             spendingTableView.insertRows(at: [newIndexPath], with: .bottom)
             spendingTableView.scrollToRow(at: newIndexPath, at: .bottom, animated: true)
         }
@@ -124,27 +116,27 @@ class SpendingViewController: UIViewController {
 
 extension SpendingViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return spendingNames.count
+        return spots.spotArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = spendingTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = spendingNames[indexPath.row]
-        cell.detailTextLabel?.text = spendingDates[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = spots.spotArray[indexPath.row].spendingName
+        cell.detailTextLabel?.text = spots.spotArray[indexPath.row].spendingDate
         return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            spendingNames.remove(at: indexPath.row)
+            spots.spotArray.remove(at: indexPath.row)
             spendingTableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let itemToMove = SpendListItems[sourceIndexPath.row]
-        SpendListItems.remove(at: sourceIndexPath.row)
-        SpendListItems.insert(itemToMove, at: destinationIndexPath.row)
+        let itemToMove = spots.spotArray[sourceIndexPath.row]
+        spots.spotArray.remove(at: sourceIndexPath.row)
+        spots.spotArray.insert(itemToMove, at: destinationIndexPath.row)
     }
     
 }

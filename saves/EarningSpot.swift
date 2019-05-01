@@ -19,7 +19,7 @@ class EarningSpot{
     var postingUserID: String
     
     var dictionary: [String: Any] {
-        return ["earningName": earningName, "earningDate":earningDate, "searningCost": earningCost, "earningReview": earningReview, "postingUserID": postingUserID]
+        return ["earningName": earningName, "earningDate":earningDate, "earningCost": earningCost, "earningReview": earningReview, "postingUserID": postingUserID]
     }
     
     init(earningName: String, earningDate: String,earningCost: Double, earningReview: String,documentID: String, postingUserID: String) {
@@ -44,6 +44,7 @@ class EarningSpot{
     }
     
     func saveData(completed: @escaping (Bool) -> ()) {
+        print("saving data")
         let db = Firestore.firestore()
         
         guard let postingUserID = (Auth.auth().currentUser?.uid) else {
@@ -55,6 +56,9 @@ class EarningSpot{
         // Create the dictionary representing the data we want to save
         let dataToSave = self.dictionary
         
+        print("Earning Cost: " + String(dataToSave["earningCost"] as! Double))
+        
+        print("Doc ID: " + self.documentID)
         // if we HAVE saved a record, we'll have a documentID
         if self.documentID != "" {
             let ref = db.collection("EarningSpots").document(self.documentID)
@@ -68,6 +72,7 @@ class EarningSpot{
                 }
             }
         } else {
+            print("We don't have the document ID")
             var ref: DocumentReference? = nil // Let firestore create the new documentID
             ref = db.collection("EarningSpots").addDocument(data: dataToSave) { error in
                 if let error = error {

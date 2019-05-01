@@ -17,6 +17,14 @@ class EarningSpots {
         db = Firestore.firestore()
     }
     
+    func totalCost() -> Double {
+        var res = 0.0
+        for e in earningSpotArray {
+            res += e.earningCost
+        }
+        return res
+    }
+    
     func loadData(completed: @escaping () -> ())  {
         db.collection("EarningSpots").addSnapshotListener { (querySnapshot, error) in
             guard error == nil else {

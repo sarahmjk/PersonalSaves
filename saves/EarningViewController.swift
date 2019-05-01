@@ -15,60 +15,31 @@ class EarningViewController: UIViewController {
     @IBOutlet weak var totalEarningLabel: UILabel!
     @IBOutlet weak var earningTableView: UITableView!
     
-//    struct EarningListItem {
-//        var earningName = ""
-//        var earningDate = ""
-//        var earningCost = 0.0
-//        var earningReview = ""
-//    }
-    
     var totalEarning = 0.0
-    var earningSpot: EarningSpot!
     var earningSpots: EarningSpots!
-//    var EarningListItems: [EarningListItem] = []
     
-    
-//    var earningNames: [String] = []
-//    var earningDates: [String] = []
-//    var earningCosts: [Double] = []
-//    var earningReviews: [String] = []
+    var defaultsData = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        EarningTableView.delegate = self
-//        EarningTableView.dataSource = self
         totalEarningLabel.text = String(totalEarning)
         
-        if earningSpot == nil {
-            earningSpot = EarningSpot()
-        }
-        
         earningSpots = EarningSpots()
-//        for _ in 0..<EarningSpots.count{
-//            earningCosts.append(0.0)
-//        }
-//
-//        for _ in 0..<earningNames.count{
-//            earningDates.append("")
-//        }
-//        for _ in 0..<earningNames.count{
-//            earningReviews.append("")
-//        }
-//
-//        for earningName in earningNames {
-//            EarningListItems.append(EarningListItem(earningName: earningName, earningDate: "", earningCost: 0.0, earningReview: ""))
-//        }
-//        for EarningListItem in EarningListItems {
-//            print(EarningListItem.earningName, EarningListItem.earningDate)
-//        }
-
+        totalEarning = defaultsData.double(forKey: "totalEarning")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) { 
         earningSpots.loadData {
             self.earningTableView.reloadData()
+            self.totalEarning = 0.0
+            for earningSpot in self.earningSpots.earningSpotArray {
+                self.totalEarning = self.totalEarning + earningSpot.earningCost
+            }
+            self.defaultsData.set(self.totalEarning, forKey: "totalEarning")
+            self.totalEarningLabel.text = String(self.totalEarning)
+            
         }
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -82,25 +53,18 @@ class EarningViewController: UIViewController {
             }
         }
     }
-    
-    func totalEarningValue () {
 
-        let totalEarning = self.totalEarning + earningSpot.earningCost
-        totalEarningLabel.text = String(totalEarning)
-
-    }
-
-    @IBAction func unwindFromItemDetailViewController(segue: UIStoryboardSegue) {
-        let source = segue.source as! EarningDetailViewController
-        if let selectedIndexPath = earningTableView.indexPathForSelectedRow {
-            earningSpots.earningSpotArray[selectedIndexPath.row] = source.earningSpot
-        } else {
-            let newIndexPath = IndexPath(row: earningSpots.earningSpotArray.count, section: 0)
-            earningSpots.earningSpotArray.append(source.earningSpot)
-            earningTableView.insertRows(at: [newIndexPath], with: .bottom)
-            earningTableView.scrollToRow(at: newIndexPath, at: .bottom, animated: true)
-        }
-    }
+//    @IBAction func unwindFromItemDetailViewController(segue: UIStoryboardSegue) {
+//        let source = segue.source as! EarningDetailViewController
+//        if let selectedIndexPath = earningTableView.indexPathForSelectedRow {
+//            earningSpots.earningSpotArray[selectedIndexPath.row] = source.earningSpot
+//        } else {
+//            let newIndexPath = IndexPath(row: earningSpots.earningSpotArray.count, section: 0)
+//            earningSpots.earningSpotArray.append(source.earningSpot)
+//            earningTableView.insertRows(at: [newIndexPath], with: .bottom)
+//            earningTableView.scrollToRow(at: newIndexPath, at: .bottom, animated: true)
+//        }
+//    }
     
 
     @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
@@ -137,10 +101,11 @@ extension EarningViewController: UITableViewDataSource, UITableViewDelegate {
         cell.detailTextLabel?.text = earningSpots.earningSpotArray[indexPath.row].earningDate
         return cell
     }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             earningSpots.earningSpotArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            earningTableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     

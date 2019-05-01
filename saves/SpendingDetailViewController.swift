@@ -17,46 +17,45 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var spendingDateField: UITextField!
     @IBOutlet weak var spendingReviewField: UITextField!
     @IBOutlet weak var imageOfProduct: UIImageView!
-    
-    var spendingName: String!
-    var spendingCost: Double!
-    var spendingDate: String!
-    var spendingReview: String!
+
     var imagePicker = UIImagePickerController ()
     var photos: Photos!
     var spot: Spot!
-    
-    
+    var photo: Photo!
     
     override func viewDidLoad() {
         super.viewDidLoad()
       
         imagePicker.delegate = self
         
-        if spendingName == nil {
-            spendingCost = 0.0
-            spendingName = ""
-            spendingDate = ""
-            spendingReview = ""
-        }
-        spendingNameField.text = spendingName
-        spendingCostField.text = String(spendingCost)
-        spendingDateField.text = spendingDate
-        spendingReviewField.text = spendingReview
-        
         if spot == nil {
             spot = Spot()
         }
+        if photo == nil {
+            photo = Photo()
+        }
+        
+        photos = Photos()
+        
+        spendingNameField.text = spot.spendingName
+        spendingCostField.text = String(spot.spendingCost)
+        spendingDateField.text = spot.spendingDate
+        spendingReviewField.text = spot.spendingReview
+        
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        photos.loadData(spot: spot) {
+            self.imageOfProduct.image = self.photo.image
+        }
+    }
+    
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "UnwindFromSave" {
-            spendingName = spendingNameField.text
-            spendingCost = Double(spendingCostField.text!)
-            spendingDate = spendingDateField.text
-            spendingReview = spendingReviewField.text
-            
+            updateUserInterface()
         }
     }
     
@@ -82,11 +81,14 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
         present(alertController, animated: true, completion: nil)
     }
     
-    @IBAction func addPhotoPressed(_ sender: Any) {
-        cameraOrLibraryAlert()
+    func updateUserInterface() {
+        spot.spendingName = spendingNameField.text!
+        spot.spendingCost = Double(spendingCostField.text!)!
+        spot.spendingDate = spendingDateField.text!
+        spot.spendingReview = spendingReviewField.text!
     }
     
-    @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
+    func leaveViewController() {
         let isPresentingInAddMode = presentingViewController is UINavigationController
         if isPresentingInAddMode {
             dismiss(animated: true, completion: nil)
@@ -95,7 +97,49 @@ class SpendingDetailViewController: UIViewController, UIImagePickerControllerDel
         }
     }
     
+    func saveCancelAlert(title: String, message: String, segueIdentifier: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { (_) in
+            self.spot.saveData { success in
+//                self.saveButton.title = "Done"
+//                self.cancelButton.title = ""
+                self.navigationController?.setToolbarHidden(true, animated: true)
+//                self.disableTextEditing()
+                if segueIdentifier == "AddReview" {
+                    self.performSegue(withIdentifier: segueIdentifier, sender: nil)
+                } else {
+                    self.cameraOrLibraryAlert()
+                }
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(saveAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func addPhotoPressed(_ sender: Any) {
+        if spot.documentID == "" {
+            saveCancelAlert(title: "This Venue Has Not Been Saved", message: "You must save this venue before you can add a photo", segueIdentifier: "AddPhoto")
+        } else {
+            cameraOrLibraryAlert()
+        }
+        
+    }
+    
+    @IBAction func cancelButtonPressed(_ sender: UIBarButtonItem) {
+        leaveViewController()
+    }
+    
     @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
+        self.updateUserInterface()
+        spot.saveData { success in
+            if success {
+                self.leaveViewController()
+            } else {
+                print("ERROR")
+            }
+        }
     }
 
 }
@@ -105,6 +149,7 @@ extension SpendingDetailViewController   {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let photo = Photo()
         photo.image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        imageOfProduct.image = photo.image
         dismiss(animated: true) {
             photo.saveData(spot: self.spot) { (success) in
             }
